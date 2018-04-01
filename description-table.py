@@ -31,4 +31,15 @@ for table in table_names:
         ]
     }
 
+# Add row count
+for table in readable_description.keys():
+    cur.execute("SELECT COUNT(*) FROM %s", (AsIs(table), ))
+    row_count = cur.fetchone()
+    readable_description[table]["total"] = row_count
+
+# Add sample rows
+for table in readable_description.keys():
+    cur.execute("SELECT * FROM %s LIMIT 100", (AsIs(table), ))
+    readable_description[table]["sample_rows"] = cur.fetchall()
+
 print(readable_description)
